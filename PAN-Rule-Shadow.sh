@@ -86,24 +86,24 @@ _callXMLAPIShadowWarning()
 }
 
 
-_iterateCount()
+_iterateShadowCount()
 {
 	while :
 	do
 		local ENTRY_SEPERATOR="<entry name="
 		case $COUNT_RESPONSE in
-		  (*"$ENTRY_SEPERATOR"*)
-		    local FOUND="y"
-		    local BEFORE=${COUNT_RESPONSE%%"$ENTRY_SEPERATOR"*}
-		    local AFTER=${COUNT_RESPONSE#*"$ENTRY_SEPERATOR"}
-		    ;;
-		  (*)
-		    local FOUND="n"
-		    local BEFORE=$COUNT_RESPONSE
-		    local AFTER=
-		    ;;
+		(*"$ENTRY_SEPERATOR"*)
+			local FOUND="y"
+			local BEFORE=${COUNT_RESPONSE%%"$ENTRY_SEPERATOR"*}
+			local AFTER=${COUNT_RESPONSE#*"$ENTRY_SEPERATOR"}
+			;;
+		(*)
+			local FOUND="n"
+			local BEFORE=$COUNT_RESPONSE
+			local AFTER=
+			;;
 		esac
-			if [[ x$FOUND == xy  ]]
+			if [[ x$FOUND == xy ]]
 			then
 				local UUID_SEPERATOR="uuid="
 				local UUID_STRING=${AFTER#*"$UUID_SEPERATOR"}
@@ -119,24 +119,24 @@ _iterateCount()
 }
 
 
-_iterateMessages()
+_iterateShadowWarning()
 {
 	while :
 	do
 		local MEMBER_SEPERATOR="<member>"
 		case $WARNING_RESPONSE in
-		  (*"$MEMBER_SEPERATOR"*)
-		    local FOUND="y"
-		    local BEFORE=${WARNING_RESPONSE%%"$MEMBER_SEPERATOR"*}
-		    local AFTER=${WARNING_RESPONSE#*"$MEMBER_SEPERATOR"}
-		    ;;
-		  (*)
-		    local FOUND="n"
-		    local BEFORE=$WARNING_RESPONSE
-		    local AFTER=
-		    ;;
+		(*"$MEMBER_SEPERATOR"*)
+			local FOUND="y"
+			local BEFORE=${WARNING_RESPONSE%%"$MEMBER_SEPERATOR"*}
+			local AFTER=${WARNING_RESPONSE#*"$MEMBER_SEPERATOR"}
+			;;
+		(*)
+			local FOUND="n"
+			local BEFORE=$WARNING_RESPONSE
+			local AFTER=
+			;;
 		esac
-			if [[ x$FOUND == xy  ]]
+			if [[ x$FOUND == xy ]]
 			then
 				local MEMBER_CLOSE_SEPERATOR="</member>"
 				local MESSAGE_STRING_BEFORE=${AFTER%%"$MEMBER_CLOSE_SEPERATOR"*}
@@ -158,15 +158,15 @@ _main()
 	_checkCurlAvailable
 	echo "Attempt to fetch shadow rules. (TIME: $(date))"
 	echo "Using IP: $PAN_IP, USER: $PAN_USERNAME, VSYS: $PAN_VSYS."
-    echo "---"
+	echo "---"
 	_getAPIKey
 	_callXMLAPIShadowCount
-	_iterateCount
+	_iterateShadowCount
 
 	for VALUE in "${UUID_ARRAY[@]}"
 	do
-	    _callXMLAPIShadowWarning $VALUE
-		_iterateMessages
+		_callXMLAPIShadowWarning $VALUE
+		_iterateShadowWarning
 
 		for VALUE in "${MESSAGE_ARRAY[@]}"
 		do
@@ -176,7 +176,7 @@ _main()
 		unset MESSAGE_ARRAY
 	done
 
-    echo "---"
+	echo "---"
 	echo "All succeeded, bye!"
 }
 
