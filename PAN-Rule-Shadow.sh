@@ -156,7 +156,7 @@ _main()
 {
 	_checkVariables
 	_checkCurlAvailable
-	echo "Attempt to fetch shadow rules. (TIME: $(date))"
+	echo "Attempt to fetch rule shadow warnings. (TIME: $(date))"
 	echo "Using IP: $PAN_IP, USER: $PAN_USERNAME, VSYS: $PAN_VSYS."
 	echo "---"
 	_getAPIKey
